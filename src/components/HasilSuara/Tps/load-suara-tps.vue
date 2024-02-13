@@ -58,16 +58,32 @@
         </v-row>
         <v-divider class="my-3"></v-divider>
         <v-tabs grow v-model="currentItems">
-          <v-tab href="#DPR RI"> DPR RI </v-tab>
-          <v-tab href="#DPRD PROV"> DPRD PROVINSI </v-tab>
-          <v-tab href="#DPRD KOTA"> DPRD KABUPATEN/KOTA </v-tab>
+          <v-tab href="#DPR_RI"> DPR RI </v-tab>
+          <v-tab href="#DPRD_PROV"> DPRD PROVINSI </v-tab>
+          <v-tab href="#DPRD_KOTA"> DPRD KABUPATEN/KOTA </v-tab>
 
           <v-tabs-items v-model="currentItems">
-            <v-tab-item value="DPR RI">
-              <tps-dpr-ri :tps="tps" />
+            <v-tab-item value="DPR_RI">
+              <tps-dpr-ri
+                :tps="tps"
+                :hasil-suara="hasilSuara"
+                @reloadHasil="dataHasil"
+              />
             </v-tab-item>
-            <v-tab-item value="DPRD PROV"> </v-tab-item>
-            <v-tab-item value="DPRD KOTA"> </v-tab-item>
+            <v-tab-item value="DPRD_PROV">
+              <tps-dprd-prov
+                :tps="tps"
+                :hasil-suara="hasilSuara"
+                @reloadHasil="dataHasil"
+              />
+            </v-tab-item>
+            <v-tab-item value="DPRD_KOTA">
+              <tps-dprd-kota
+                :tps="tps"
+                :hasil-suara="hasilSuara"
+                @reloadHasil="dataHasil"
+              />
+            </v-tab-item>
           </v-tabs-items>
         </v-tabs>
       </v-card-text>
@@ -78,12 +94,16 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import tpsDprRi from "./tps-dpr-ri.vue";
+import TpsDprdKota from "./tps-dprd-kota.vue";
+import TpsDprdProv from "./tps-dprd-prov.vue";
 
 export default {
-  components: { tpsDprRi },
+  components: { tpsDprRi, TpsDprdProv, TpsDprdKota },
   data: () => ({
-    currentItems: "DPR RI",
+    currentItems: "DPR_RI",
+    tpsSelected: null,
     tps: null,
+    hasilSuara: [],
   }),
   computed: {
     ...mapGetters({
@@ -100,20 +120,24 @@ export default {
       getDataKecamatan: "wilayah/getKecamatan",
       getDataDesa: "wilayah/getDesa",
       getDataTps: "wilayah/getTps",
+      getHasilSuara: "hasil/getHasilSuara",
     }),
     actionKecamatan(e) {
+      this.tps = null;
       let query = {
         id: e,
       };
       this.getDataKecamatan(query);
     },
     actionDesa(e) {
+      this.tps = null;
       let query = {
         id: e,
       };
       this.getDataDesa(query);
     },
     actionTps(e) {
+      this.tps = null;
       let query = {
         uid_wilayah: e,
         limit: 50,
@@ -121,13 +145,28 @@ export default {
       };
       this.getDataTps(query);
     },
-    populateDapil(e) {
+    async populateDapil(e) {
+      this.hasilSuara = [];
       this.tps = e;
+      this.dataHasil();
+      this.currentItems = "DPR_RI";
+    },
+    async dataHasil() {
+      console.log("GET HASIL");
+      let queryHasil = {
+        uid_tps: this.tps?.uid,
+      };
+      await this.getHasilSuara(queryHasil).then((response) => {
+        if (response.data.length > 0) {
+          this.hasilSuara = response.data;
+        }
+      });
     },
   },
 
   created() {
     this.getDataKota();
+    this.tps = null;
   },
 };
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-card flat v-if="tps">
-      <template v-if="dataDapilDprRi">
+      <template v-if="dataDapilDprdKota">
         <v-card-text class="pa-0 py-2">
           <v-row no-gutters align="center" justify="center">
             <v-col cols="12">
@@ -16,7 +16,8 @@
               <v-card-title
                 class="justify-center py-0 text-subtitle-1 black--text font-weight-bold"
               >
-                - DPR RI / {{ dataDapilDprRi?.dapil?.nama?.toUpperCase() }} -
+                - DPRD KABUPATEN KOTA /
+                {{ dataDapilDprdKota?.dapil?.nama?.toUpperCase() }} -
                 <v-icon
                   right
                   large
@@ -41,7 +42,7 @@
           <v-form ref="form" v-model="valid">
             <v-row class="my-1">
               <v-col
-                v-for="(item, index) in dataDapilDprRi?.partai"
+                v-for="(item, index) in dataDapilDprdKota?.partai"
                 :key="index"
                 cols="12"
                 :class="`mb-0 py-1 ${index == flag ? 'col-lg-12' : 'col-lg-3'}`"
@@ -55,16 +56,16 @@
                   >
                     <v-card :color="index == flag ? '#2d2f90' : 'green'">
                       <div
-                        v-if="dataSuaraDprRi"
+                        v-if="dataSuaraDprdKota"
                         class="d-flex flex-no-wrap justify-space-between"
                         :key="idx"
                       >
                         <template
                           v-if="
-                            dataSuaraDprRi[
+                            dataSuaraDprdKota[
                               idx === 0
                                 ? index
-                                : dataDapilDprRi.partai.length - 1 + idx
+                                : dataDapilDprdKota.partai.length - 1 + idx
                             ]
                           "
                         >
@@ -85,10 +86,12 @@
                             <v-card-actions class="pt-0 pb-2">
                               <v-text-field
                                 v-model="
-                                  dataSuaraDprRi[
+                                  dataSuaraDprdKota[
                                     idx === 0
                                       ? index
-                                      : dataDapilDprRi.partai.length - 1 + idx
+                                      : dataDapilDprdKota.partai.length -
+                                        1 +
+                                        idx
                                   ].jumlah_suara
                                 "
                                 class="text-caption font-weight-bold"
@@ -140,24 +143,24 @@
             no-gutters
             align="center"
             justify="center"
-            v-if="dataSuaraDprRi.length > 0"
+            v-if="dataSuaraDprdKota.length > 0"
           >
             <v-col cols="12" class="col-lg-6 pa-1">
               <v-btn
                 color="secondary"
                 block
                 style="border-radius: 10px"
-                @click="document.getElementById('uploaderAwalDprRi').click()"
+                @click="document.getElementById('uploaderAwalDprdKota').click()"
               >
                 <v-icon left>mdi-paperclip</v-icon>
-                Foto C Hasil Salinan ({{ fotoDprRi.length }} file)
+                Foto C Hasil Salinan ({{ fotoDprdKota.length }} file)
                 <v-file-input
-                  v-model="tempDprRi"
+                  v-model="tempDprdKota"
                   :rules="[rules.required]"
                   multiple
                   class="d-none"
-                  id="uploaderAwalDprRi"
-                  @change="chooseImageDprRi"
+                  id="uploaderAwalDprdKota"
+                  @change="chooseImageDprdKota"
                 ></v-file-input>
               </v-btn>
             </v-col>
@@ -201,9 +204,9 @@ export default {
     publicPathPartai: "img/partai/",
     publicPathCaleg: "img/caleg/",
     flag: 11,
-    dataSuaraDprRi: [],
-    fotoDprRi: [],
-    tempDprRi: [],
+    dataSuaraDprdKota: [],
+    fotoDprdKota: [],
+    tempDprdKota: [],
     alertSnackbar: false,
     textSnackbar: "",
     colorSnackbar: "",
@@ -214,7 +217,7 @@ export default {
 
   computed: {
     ...mapGetters({
-      dataDapilDprRi: "dapil/dapilDprRi",
+      dataDapilDprdKota: "dapil/dapilDprdKota",
     }),
   },
 
@@ -228,27 +231,27 @@ export default {
 
   methods: {
     ...mapActions({
-      getDataDapilDprRi: "dapil/getDapilDprRi",
-      postDataDprRi: "hasil/postHasilSuara",
+      getDataDapilDprdKota: "dapil/getDapilDprdKota",
+      postDataDprdKota: "hasil/postHasilSuara",
     }),
     async getDapil() {
       let queryDapil = {
-        wilayah: this.tps?.uid_wilayah?.toString().substring(0, 4),
+        wilayah: this.tps?.uid_wilayah?.toString().substring(0, 6),
       };
-      await this.getDataDapilDprRi(queryDapil)
+      await this.getDataDapilDprdKota(queryDapil)
         .then(() => {
-          this.dataDapilDprRi.partai.map((el, index) => {
+          this.dataDapilDprdKota.partai.map((el, index) => {
             el.calegs.map((val, idx) => {
               if (idx == 0) {
-                this.dataSuaraDprRi[index] = {
+                this.dataSuaraDprdKota[index] = {
                   caleg: val.uid,
                   jumlah_suara: null,
                   nama: val.nama,
                   uid_partai: el.id,
                 };
               } else {
-                this.dataSuaraDprRi[
-                  this.dataDapilDprRi.partai.length - 1 + idx
+                this.dataSuaraDprdKota[
+                  this.dataDapilDprdKota.partai.length - 1 + idx
                 ] = {
                   caleg: val.uid,
                   jumlah_suara: null,
@@ -267,12 +270,12 @@ export default {
         });
 
       if (this.hasilSuara.length > 0) {
-        this.dataSuaraDprRi.forEach((val, index) => {
+        this.dataSuaraDprdKota.forEach((val, index) => {
           let find = this.hasilSuara.find((obj) => {
             return obj.uid_caleg === val.caleg;
           });
           if (find) {
-            this.dataSuaraDprRi[index].jumlah_suara = find.jumlah_suara;
+            this.dataSuaraDprdKota[index].jumlah_suara = find.jumlah_suara;
             this.state = "EDIT";
           } else {
             this.state = "SAVE";
@@ -283,25 +286,25 @@ export default {
     },
     async postHasil() {
       let total = 0;
-      this.btnLoading = true;
+      //this.btnLoading = true;
       this.valid = false;
       let timeStamp = new Date().toISOString().replaceAll(":", "-");
-      this.dataSuaraDprRi.forEach((el) => {
+      this.dataSuaraDprdKota.forEach((el) => {
         total += Number(el.jumlah_suara);
       });
       if (total <= 350) {
         const dataSend = new FormData();
         dataSend.append("user", this.user);
         dataSend.append("tps", this.tps?.uid);
-        dataSend.append("suara", JSON.stringify(this.dataSuaraDprRi));
-        if (this.fotoDprRi.length > 0) {
+        dataSend.append("suara", JSON.stringify(this.dataSuaraDprdKota));
+        if (this.fotoDprdKota.length > 0) {
           let newFoto = [];
-          this.fotoDprRi.forEach((item, index) => {
+          this.fotoDprdKota.forEach((item, index) => {
             let kode = `C1-${this.tps?.kabupaten}-${this.tps?.kecamatan}-${
               this.tps?.kelurahan
             }-tps ${this.tps?.nomor}-${
               index + 1
-            }-${timeStamp}-DPRRI.${item.file.name.split(".").pop()}`;
+            }-${timeStamp}-DPRDPROV.${item.file.name.split(".").pop()}`;
             newFoto.push(
               new File([item.file], kode.toLowerCase(), {
                 type: item.file.type,
@@ -319,7 +322,7 @@ export default {
       }
     },
     post(data) {
-      this.postDataDprRi(data)
+      this.postDataDprdKota(data)
         .then((response) => {
           this.textSnackbar = response.message;
           this.colorSnackbar = "success";
@@ -332,16 +335,16 @@ export default {
         })
         .finally(() => {
           this.btnLoading = false;
-          this.fotoDprRi = [];
-          this.tempDprRi = [];
+          this.fotoDprdKota = [];
+          this.tempDprdKota = [];
           this.getDapil();
           this.$emit("reloadHasil");
         });
     },
-    chooseImageDprRi() {
-      if (this.tempDprRi?.length) {
-        this.tempDprRi.map((el) => {
-          this.fotoDprRi.unshift({
+    chooseImageDprdKota() {
+      if (this.tempDprdKota?.length) {
+        this.tempDprdKota.map((el) => {
+          this.fotoDprdKota.unshift({
             url: URL.createObjectURL(el),
             file: el,
             ket: "",
@@ -364,7 +367,7 @@ export default {
 
   mounted() {
     if (this.tps) {
-      console.log("GET DPR RI");
+      console.log("GET DPRD KOTA");
       this.getDapil();
     }
   },

@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import auth from './auth'
 import wilayah from './wilayah'
 import dapil from './dapil'
+import hasil from './hasil'
 
 Vue.use(Vuex)
 
@@ -18,6 +19,7 @@ export default new Vuex.Store({
   modules: {
     auth,
     wilayah,
-    dapil
+    dapil,
+    hasil
   }
 })
