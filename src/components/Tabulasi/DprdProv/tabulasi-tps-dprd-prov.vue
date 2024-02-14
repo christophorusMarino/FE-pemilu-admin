@@ -74,7 +74,7 @@
               </v-col>
               <v-col cols="12">
                 <v-card-title
-                  class="py-0 justify-center font-weight-bold black--text text-subtitle-2"
+                  class="py-0 justify-center font-weight-bold white--text text-subtitle-2"
                 >
                   - PEROLEHAN KURSI PARPOL -
                 </v-card-title>
@@ -128,6 +128,7 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 import { Bar } from "vue-chartjs";
 import {
   Chart as ChartJS,
@@ -147,7 +148,6 @@ ChartJS.register(
   LinearScale
 );
 import ChartDataLabels from "chartjs-plugin-datalabels";
-import { mapActions } from "vuex";
 ChartJS.register(ChartDataLabels);
 
 export default {
