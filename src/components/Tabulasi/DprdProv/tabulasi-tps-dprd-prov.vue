@@ -230,6 +230,7 @@ export default {
     }),
     async tabulasiDprdProvTps() {
       this.resultPartaiDprdProvTps = [];
+      this.resultCalegDprdProvTps = [];
       this.loading = true;
       let layer = "DPRD PROVINSI RIAU";
       let jenis = "tps";

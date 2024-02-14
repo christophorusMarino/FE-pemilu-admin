@@ -17,7 +17,9 @@
               ></v-autocomplete>
             </v-col>
             <v-col cols="1">
-              <v-icon x-large @click="tabulasiDprdKotaTps"> mdi-refresh-circle </v-icon>
+              <v-icon x-large @click="tabulasiDprdKotaTps">
+                mdi-refresh-circle
+              </v-icon>
             </v-col>
             <v-col cols="4"></v-col>
           </v-row>
@@ -257,6 +259,7 @@ export default {
     }),
     async tabulasiDprdKotaTps() {
       this.resultPartaiDprdKotaTps = [];
+      this.resultCalegDprdKotaTps = [];
       this.loading = true;
       let layer = "DPRD KAB/KOTA";
       let jenis = "tps";

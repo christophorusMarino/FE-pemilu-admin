@@ -3,7 +3,9 @@
     <v-row no-gutters v-if="!loading">
       <v-col cols="12">
         <v-card-title class="py-0 justify-center">
-          <v-icon x-large @click="() => tabulasiDprRiTps()">mdi-refresh-circle</v-icon>
+          <v-icon x-large @click="() => tabulasiDprRiTps()"
+            >mdi-refresh-circle</v-icon
+          >
         </v-card-title>
       </v-col>
       <v-col cols="6" v-for="(data, idx) in dataHasilDprRiTps" :key="idx">
@@ -226,6 +228,7 @@ export default {
     }),
     async tabulasiDprRiTps() {
       this.resultPartaiDprRiTps = [];
+      this.resultCalegDprRiTps = [];
       this.loading = true;
       let layer = "DPR RI";
       let jenis = "tps";
