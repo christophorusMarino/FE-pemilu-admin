@@ -31,7 +31,7 @@
                 >
                   - PEROLEHAN SUARA PARTAI -
                 </v-card-title>
-                <v-card-text class="ma-0 pa-0">
+                <v-card-text class="ma-0 px-2">
                   <Bar
                     :chart-options="chartOptions"
                     :data="resultPartaiDprRiTps[idx].result"
@@ -48,6 +48,46 @@
                 >
                   - PEROLEHAN SUARA CALEG -
                 </v-card-title>
+                <v-card-text class="ma-0 px-2">
+                  <Bar
+                    :chart-options="chartOptions"
+                    :data="resultCalegDprRiTps[idx].result"
+                    :chart-id="chartId"
+                    :dataset-id-key="datasetIdKey"
+                    :width="width"
+                    :height="height"
+                  />
+                </v-card-text>
+              </v-col>
+              <v-col cols="12">
+                <v-card-title
+                  class="py-0 justify-center font-weight-bold black--text text-subtitle-2"
+                >
+                  - PEROLEHAN KURSI PARPOL -
+                </v-card-title>
+                <v-card-text class="ma-0 px-2">
+                  <v-row no-gutters>
+                    <v-col
+                      cols="3"
+                      v-for="(val, key, index) in dataHasilDprRiTps[idx].kursi"
+                      :key="index"
+                    >
+                      <v-card color="teal darken-2" outlined class="ma-1">
+                        <v-card-title
+                          class="justify-center white--text font-weight-bold black--text text-subtitle-2"
+                        >
+                          {{ key.toUpperCase() }}
+                        </v-card-title>
+                        <v-divider></v-divider>
+                        <v-card-title
+                          class="justify-center white--text font-weight-bold black--text text-caption"
+                        >
+                          Kursi: {{ val }}
+                        </v-card-title>
+                      </v-card>
+                    </v-col>
+                  </v-row>
+                </v-card-text>
               </v-col>
             </v-row>
           </v-card-text>
@@ -124,6 +164,7 @@ export default {
     textSnackbar: "",
     colorSnackbar: "",
     dataHasilDprRiTps: [],
+    dataHasilCalegDprRiTps: [],
     chartOptions: {
       responsive: true,
       maintainAspectRatio: false,
@@ -148,8 +189,9 @@ export default {
       "PPP",
       "Ummat",
     ],
-    bcPartai: "#561c24",
+    bcPartai: "rgba(86, 28, 36, 0.4)",
     resultPartaiDprRiTps: [],
+    resultCalegDprRiTps: [],
   }),
 
   watch: {
@@ -182,6 +224,7 @@ export default {
         .then((response) => {
           this.dataHasilDprRiTps = response.hasilFinal;
           this.setDataHasilPartai(response.hasilFinal);
+          this.setHasilCaleg(response.hasilFinal);
         })
         .catch((e) => {
           this.textSnackbar = "FETCH DATA DAPIL ERROR";
@@ -220,8 +263,8 @@ export default {
                   el.suaraPartai.ummat,
                 ],
                 datalabels: {
-                  color: 'black',
-                  backgroundColor: 'whitesmoke',
+                  color: "black",
+                  backgroundColor: "whitesmoke",
                   align: "end",
                   anchor: "center",
                 },
@@ -233,6 +276,43 @@ export default {
       });
       this.loading = false;
       console.log(this.resultPartaiDprRiTps);
+    },
+    setHasilCaleg(data) {
+      data.forEach((el) => {
+        let label = [];
+        let js = [];
+        el.CalegPan.forEach((e) => {
+          if (e.nama !== "PAN") {
+            label.push(e.nama);
+          }
+        });
+        el.CalegPan.forEach((e) => {
+          if (e.nama !== "PAN") {
+            js.push(e.jumlah_suara);
+          }
+        });
+        let rest = {
+          result: {
+            labels: label,
+            datasets: [
+              {
+                label: "perolehan suara",
+                backgroundColor: "rgba(0, 121, 107, 0.4)",
+                data: js,
+                datalabels: {
+                  color: "black",
+                  backgroundColor: "whitesmoke",
+                  align: "end",
+                  anchor: "center",
+                },
+              },
+            ],
+          },
+        };
+        this.resultCalegDprRiTps.push(rest);
+      });
+      this.loading = false;
+      console.log(this.resultCalegDprRiTps);
     },
   },
 

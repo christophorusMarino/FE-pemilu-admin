@@ -88,7 +88,6 @@ ChartJS.register(
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import { mapActions } from "vuex";
 ChartJS.register(ChartDataLabels);
-ChartJS.defaults.color = 'white';
 
 export default {
   components: { Bar },
@@ -143,7 +142,7 @@ export default {
       "PPP",
       "Ummat",
     ],
-    bcPartai: "#00897B",
+    bcPartai: "rgba(0, 137, 123, 0.7)",
     resultPartaiDprdProvTps: [],
   }),
 
