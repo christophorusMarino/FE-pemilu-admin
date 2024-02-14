@@ -20,6 +20,11 @@
               >
                 Jumlah Kursi : {{ data.jumlah_kursi }}
               </v-card-title>
+              <v-card-title
+                class="py-0 justify-center font-weight-bold black--text text-caption"
+              >
+                Suara Masuk : {{ fromTps[idx]?.tps_input_suara }} /  {{ fromTps[idx]?.jumlah_tps }} TPS
+              </v-card-title>
             </v-col>
           </v-row>
           <v-divider class="my-1"></v-divider>
@@ -192,6 +197,7 @@ export default {
     bcPartai: "rgba(86, 28, 36, 0.4)",
     resultPartaiDprRiTps: [],
     resultCalegDprRiTps: [],
+    fromTps: [],
   }),
 
   watch: {
@@ -210,8 +216,9 @@ export default {
   methods: {
     ...mapActions({
       getTabulasi: "tabulasi/getDataTabulasi",
+      getSuara: "tabulasi/getHasilTps",
     }),
-    tabulasiDprRiTps() {
+    async tabulasiDprRiTps() {
       this.resultPartaiDprRiTps = [];
       this.loading = true;
       let layer = "DPR RI";
@@ -220,7 +227,7 @@ export default {
         layer: layer,
         jenis: jenis,
       };
-      this.getTabulasi(param)
+      await this.getTabulasi(param)
         .then((response) => {
           this.dataHasilDprRiTps = response.hasilFinal;
           this.setDataHasilPartai(response.hasilFinal);
@@ -231,6 +238,13 @@ export default {
           this.colorSnackbar = "error";
           this.alertSnackbar = true;
         });
+      let payload = {
+        dapil: "dprri",
+        param: {},
+      };
+      this.getSuara(payload).then((response) => {
+        this.fromTps = response.data
+      });
     },
     setDataHasilPartai(data) {
       console.log(data);
@@ -282,14 +296,10 @@ export default {
         let label = [];
         let js = [];
         el.CalegPan.forEach((e) => {
-          if (e.nama !== "PAN") {
-            label.push(e.nama);
-          }
+          label.push(e.nama);
         });
         el.CalegPan.forEach((e) => {
-          if (e.nama !== "PAN") {
-            js.push(e.jumlah_suara);
-          }
+          js.push(e.jumlah_suara);
         });
         let rest = {
           result: {

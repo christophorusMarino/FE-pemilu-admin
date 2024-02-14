@@ -42,6 +42,16 @@
                   />
                 </v-card-text>
               </v-col>
+              <v-col cols="12">
+                <v-card-title
+                  class="py-0 justify-center font-weight-bold white--text text-subtitle-2"
+                >
+                  - PEROLEHAN SUARA CALEG -
+                </v-card-title>
+                <v-card-text class="ma-0 px-2">
+                  
+                </v-card-text>
+              </v-col>
             </v-row>
           </v-card-text>
         </v-card>

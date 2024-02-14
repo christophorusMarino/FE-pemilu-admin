@@ -26,6 +26,23 @@ export default {
                         reject(error)
                     })
             })
+        },
+
+        getHasilTps(_, { dapil, param }) {
+            let role = JSON.parse(localStorage.getItem("xrfgthj")).role;
+            return new Promise((resolve, reject) => {
+                axios.get(`tps/dapil/${dapil}?${resolveQueryParams(param)}`, {
+                    headers: {
+                        "role": role
+                    },
+                })
+                    .then((response) => {
+                        resolve(response.data)
+                    })
+                    .catch(error => {
+                        reject(error)
+                    })
+            })
         }
     }
 }
