@@ -104,6 +104,7 @@ export default {
     tpsSelected: null,
     tps: null,
     hasilSuara: [],
+    user: JSON.parse(localStorage.getItem("xrfgthj")),
   }),
   computed: {
     ...mapGetters({
@@ -165,7 +166,13 @@ export default {
   },
 
   created() {
-    this.getDataKota();
+    let query = {};
+    if (this.user.uid_wilayah) {
+      query = {
+        id: this.user.uid_wilayah,
+      };
+    }
+    this.getDataKota(query);
     this.tps = null;
   },
 };

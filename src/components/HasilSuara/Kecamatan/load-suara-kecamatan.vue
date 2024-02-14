@@ -28,29 +28,6 @@
               @change="(e) => actionDesa(e)"
             ></v-autocomplete>
           </v-col>
-          <v-col cols="12" class="col-lg-3 col-md-3 col-sm-12">
-            <v-autocomplete
-              label="pilih kelurahan"
-              outlined
-              dense
-              hide-details
-              :items="dataDesa"
-              item-text="nama"
-              item-value="uid"
-              @change="(e) => actionTps(e)"
-            ></v-autocomplete>
-          </v-col>
-          <v-col cols="12" class="col-lg-3 col-md-3 col-sm-12">
-            <v-autocomplete
-              label="pilih tps"
-              outlined
-              dense
-              hide-details
-              :items="dataTps"
-              item-text="nama"
-              item-value="uid"
-            ></v-autocomplete>
-          </v-col>
         </v-row>
         <v-divider class="my-3"></v-divider>
       </v-card-text>
@@ -70,6 +47,10 @@ export default {
     }),
   },
 
+  data: () => ({
+    user: JSON.parse(localStorage.getItem("xrfgthj")),
+  }),
+
   methods: {
     ...mapActions({
       getDataKota: "wilayah/getKota",
@@ -78,27 +59,29 @@ export default {
       getDataTps: "wilayah/getTps",
     }),
     actionKecamatan(e) {
+      this.tps = null;
       let query = {
         id: e,
       };
       this.getDataKecamatan(query);
     },
     actionDesa(e) {
+      this.tps = null;
       let query = {
         id: e,
       };
       this.getDataDesa(query);
     },
-    actionTps(e) {
-      let query = {
-        id: e,
-      };
-      this.getDataTps(query);
-    },
   },
 
   created() {
-    this.getDataKota();
+    let query = {};
+    if (this.user.uid_wilayah) {
+      query = {
+        id: this.user.uid_wilayah,
+      };
+    }
+    this.getDataKota(query);
   },
 };
 </script>

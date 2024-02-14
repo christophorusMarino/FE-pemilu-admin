@@ -1,22 +1,22 @@
 <template>
   <div class="ma-5">
     <v-row no-gutters v-if="!loading">
-      <v-col cols="6" v-for="(data, idx) in dataHasilDprRiTps" :key="idx">
-        <v-card color="yellow" class="ma-2">
+      <v-col cols="6" v-for="(data, idx) in dataHasilDprdProvTps" :key="idx">
+        <v-card color="blue" class="ma-2">
           <v-row no-gutters>
             <v-col cols="12">
               <v-card-title
-                class="pt-1 py-0 justify-center font-weight-bold black--text text-subtitle-1"
+                class="pt-1 py-0 justify-center font-weight-bold white--text text-subtitle-1"
               >
                 HASIL PERHITUNGAN SUARA
               </v-card-title>
               <v-card-title
-                class="py-0 justify-center font-weight-bold black--text text-subtitle-1"
+                class="py-0 justify-center font-weight-bold white--text text-subtitle-1"
               >
                 - {{ data.jenis }} / {{ data.nama }} -
               </v-card-title>
               <v-card-title
-                class="py-0 justify-center font-weight-bold black--text text-caption"
+                class="py-0 justify-center font-weight-bold white--text text-caption"
               >
                 Jumlah Kursi : {{ data.jumlah_kursi }}
               </v-card-title>
@@ -27,14 +27,14 @@
             <v-row no-gutters>
               <v-col cols="12">
                 <v-card-title
-                  class="py-0 justify-center font-weight-bold black--text text-subtitle-2"
+                  class="py-0 justify-center font-weight-bold white--text text-subtitle-2"
                 >
                   - PEROLEHAN SUARA PARTAI -
                 </v-card-title>
                 <v-card-text class="ma-0 pa-0">
                   <Bar
                     :chart-options="chartOptions"
-                    :data="resultPartaiDprRiTps[idx].result"
+                    :data="resultPartaiDprdProvTps[idx].result"
                     :chart-id="chartId"
                     :dataset-id-key="datasetIdKey"
                     :width="width"
@@ -42,26 +42,20 @@
                   />
                 </v-card-text>
               </v-col>
-              <v-col cols="12">
-                <v-card-title
-                  class="py-0 justify-center font-weight-bold black--text text-subtitle-2"
-                >
-                  - PEROLEHAN SUARA CALEG -
-                </v-card-title>
-              </v-col>
             </v-row>
           </v-card-text>
         </v-card>
       </v-col>
     </v-row>
+
     <v-row no-gutters v-else>
       <v-col cols="6">
-        <v-card color="yellow lighten-4" class="ma-2">
+        <v-card color="blue lighten-4" class="ma-2">
           <v-skeleton-loader type="image"></v-skeleton-loader>
         </v-card>
       </v-col>
       <v-col cols="6">
-        <v-card color="yellow lighten-4" class="ma-2">
+        <v-card color="blue lighten-4" class="ma-2">
           <v-skeleton-loader type="image"></v-skeleton-loader>
         </v-card>
       </v-col>
@@ -73,7 +67,6 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
 import { Bar } from "vue-chartjs";
 import {
   Chart as ChartJS,
@@ -93,7 +86,9 @@ ChartJS.register(
   LinearScale
 );
 import ChartDataLabels from "chartjs-plugin-datalabels";
+import { mapActions } from "vuex";
 ChartJS.register(ChartDataLabels);
+ChartJS.defaults.color = 'white';
 
 export default {
   components: { Bar },
@@ -123,7 +118,7 @@ export default {
     alertSnackbar: false,
     textSnackbar: "",
     colorSnackbar: "",
-    dataHasilDprRiTps: [],
+    dataHasilDprdProvTps: [],
     chartOptions: {
       responsive: true,
       maintainAspectRatio: false,
@@ -148,19 +143,19 @@ export default {
       "PPP",
       "Ummat",
     ],
-    bcPartai: "#561c24",
-    resultPartaiDprRiTps: [],
+    bcPartai: "#00897B",
+    resultPartaiDprdProvTps: [],
   }),
 
   watch: {
     layer() {
-      if (this.layer === "DPR_RI" && this.jenis === "TPS_DPR_RI") {
-        this.tabulasiDprRiTps();
+      if (this.layer === "DPRD_PROV" && this.jenis === "TPS_DPRD_PROV") {
+        this.tabulasiDprdProvTps();
       }
     },
     jenis() {
-      if (this.layer === "DPR_RI" && this.jenis === "TPS_DPR_RI") {
-        this.tabulasiDprRiTps();
+      if (this.layer === "DPRD_PROV" && this.jenis === "TPS_DPRD_PROV") {
+        this.tabulasiDprdProvTps();
       }
     },
   },
@@ -169,10 +164,10 @@ export default {
     ...mapActions({
       getTabulasi: "tabulasi/getDataTabulasi",
     }),
-    tabulasiDprRiTps() {
-      this.resultPartaiDprRiTps = [];
+    tabulasiDprdProvTps() {
+      this.resultPartaiDprdProvTps = [];
       this.loading = true;
-      let layer = "DPR RI";
+      let layer = "DPRD PROVINSI RIAU";
       let jenis = "tps";
       let param = {
         layer: layer,
@@ -180,7 +175,7 @@ export default {
       };
       this.getTabulasi(param)
         .then((response) => {
-          this.dataHasilDprRiTps = response.hasilFinal;
+          this.dataHasilDprdProvTps = response.hasilFinal;
           this.setDataHasilPartai(response.hasilFinal);
         })
         .catch((e) => {
@@ -199,6 +194,7 @@ export default {
               {
                 label: "perolehan suara",
                 backgroundColor: this.bcPartai,
+                color: 'black',
                 data: [
                   el.suaraPartai.pkb,
                   el.suaraPartai.gerindra,
@@ -220,8 +216,7 @@ export default {
                   el.suaraPartai.ummat,
                 ],
                 datalabels: {
-                  color: 'black',
-                  backgroundColor: 'whitesmoke',
+                  color: "white",
                   align: "end",
                   anchor: "center",
                 },
@@ -229,16 +224,16 @@ export default {
             ],
           },
         };
-        this.resultPartaiDprRiTps.push(rest);
+        this.resultPartaiDprdProvTps.push(rest);
       });
       this.loading = false;
-      console.log(this.resultPartaiDprRiTps);
+      console.log(this.resultPartaiDprdProvTps);
     },
   },
 
   mounted() {
-    if (this.layer === "DPR_RI" && this.jenis === "TPS_DPR_RI") {
-      this.tabulasiDprRiTps();
+    if (this.layer === "DPRD_PROV" && this.jenis === "TPS_DPRD_PROV") {
+      this.tabulasiDprdProvTps();
     }
   },
 };

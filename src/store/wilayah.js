@@ -39,9 +39,9 @@ export default {
         },
     },
     actions: {
-        async getKota({ commit }) {
+        async getKota({ commit }, param) {
             try {
-                await axios.get('wilayah/kabupatenkota', {
+                await axios.get(`wilayah/kabupatenkota?${resolveQueryParams(param)}`, {
                     headers: {
                         "role": JSON.parse(localStorage.getItem("xrfgthj")).role,
                     }
