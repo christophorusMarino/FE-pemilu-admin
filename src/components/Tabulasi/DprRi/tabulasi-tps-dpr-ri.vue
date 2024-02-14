@@ -28,8 +28,8 @@
               <v-card-title
                 class="py-0 justify-center font-weight-bold black--text text-caption"
               >
-                Suara Masuk : {{ fromTps[idx]?.tps_input_suara }} /
-                {{ fromTps[idx]?.jumlah_tps }} TPS
+                Suara Masuk : {{ fromTpsDprRi[idx]?.tps_input_suara }} /
+                {{ fromTpsDprRi[idx]?.jumlah_tps }} TPS
               </v-card-title>
             </v-col>
           </v-row>
@@ -203,7 +203,7 @@ export default {
     bcPartai: "rgba(86, 28, 36, 0.4)",
     resultPartaiDprRiTps: [],
     resultCalegDprRiTps: [],
-    fromTps: [],
+    fromTpsDprRi: [],
   }),
 
   watch: {
@@ -249,7 +249,7 @@ export default {
         param: {},
       };
       this.getSuara(payload).then((response) => {
-        this.fromTps = response.data;
+        this.fromTpsDprRi = response.data;
       });
     },
     setDataHasilPartai(data) {

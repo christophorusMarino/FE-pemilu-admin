@@ -1,6 +1,13 @@
 <template>
   <div class="ma-5">
     <v-row no-gutters v-if="!loading">
+      <v-col cols="12">
+        <v-card-title class="py-0 justify-center">
+          <v-icon x-large @click="() => tabulasiDprdProvTps()">
+            mdi-refresh-circle
+          </v-icon>
+        </v-card-title>
+      </v-col>
       <v-col cols="6" v-for="(data, idx) in dataHasilDprdProvTps" :key="idx">
         <v-card color="blue" class="ma-2">
           <v-row no-gutters>
@@ -20,6 +27,12 @@
               >
                 Jumlah Kursi : {{ data.jumlah_kursi }}
               </v-card-title>
+              <v-card-title
+                class="py-0 justify-center font-weight-bold white--text text-caption"
+              >
+                Suara Masuk : {{ fromTpsDprdProv[idx]?.tps_input_suara }} /
+                {{ fromTpsDprdProv[idx]?.jumlah_tps }} TPS
+              </v-card-title>
             </v-col>
           </v-row>
           <v-divider class="my-1"></v-divider>
@@ -31,7 +44,7 @@
                 >
                   - PEROLEHAN SUARA PARTAI -
                 </v-card-title>
-                <v-card-text class="ma-0 pa-0">
+                <v-card-text class="ma-0 px-2">
                   <Bar
                     :chart-options="chartOptions"
                     :data="resultPartaiDprdProvTps[idx].result"
@@ -49,7 +62,45 @@
                   - PEROLEHAN SUARA CALEG -
                 </v-card-title>
                 <v-card-text class="ma-0 px-2">
-                  
+                  <Bar
+                    :chart-options="chartOptions"
+                    :data="resultCalegDprdProvTps[idx].result"
+                    :chart-id="chartId"
+                    :dataset-id-key="datasetIdKey"
+                    :width="width"
+                    :height="height"
+                  />
+                </v-card-text>
+              </v-col>
+              <v-col cols="12">
+                <v-card-title
+                  class="py-0 justify-center font-weight-bold black--text text-subtitle-2"
+                >
+                  - PEROLEHAN KURSI PARPOL -
+                </v-card-title>
+                <v-card-text class="ma-0 px-2">
+                  <v-row no-gutters>
+                    <v-col
+                      cols="3"
+                      v-for="(val, key, index) in dataHasilDprdProvTps[idx]
+                        .kursi"
+                      :key="index"
+                    >
+                      <v-card color="teal darken-2" outlined class="ma-1">
+                        <v-card-title
+                          class="justify-center white--text font-weight-bold black--text text-subtitle-2"
+                        >
+                          {{ key.toUpperCase() }}
+                        </v-card-title>
+                        <v-divider></v-divider>
+                        <v-card-title
+                          class="justify-center white--text font-weight-bold black--text text-caption"
+                        >
+                          Kursi: {{ val }}
+                        </v-card-title>
+                      </v-card>
+                    </v-col>
+                  </v-row>
                 </v-card-text>
               </v-col>
             </v-row>
@@ -128,6 +179,7 @@ export default {
     textSnackbar: "",
     colorSnackbar: "",
     dataHasilDprdProvTps: [],
+    dataHasilCalegDprdProvTps: [],
     chartOptions: {
       responsive: true,
       maintainAspectRatio: false,
@@ -154,6 +206,8 @@ export default {
     ],
     bcPartai: "rgba(0, 137, 123, 0.7)",
     resultPartaiDprdProvTps: [],
+    resultCalegDprdProvTps: [],
+    fromTpsDprdProv: [],
   }),
 
   watch: {
@@ -172,8 +226,9 @@ export default {
   methods: {
     ...mapActions({
       getTabulasi: "tabulasi/getDataTabulasi",
+      getSuara: "tabulasi/getHasilTps",
     }),
-    tabulasiDprdProvTps() {
+    async tabulasiDprdProvTps() {
       this.resultPartaiDprdProvTps = [];
       this.loading = true;
       let layer = "DPRD PROVINSI RIAU";
@@ -182,16 +237,24 @@ export default {
         layer: layer,
         jenis: jenis,
       };
-      this.getTabulasi(param)
+      await this.getTabulasi(param)
         .then((response) => {
           this.dataHasilDprdProvTps = response.hasilFinal;
           this.setDataHasilPartai(response.hasilFinal);
+          this.setHasilCaleg(response.hasilFinal);
         })
         .catch((e) => {
           this.textSnackbar = "FETCH DATA DAPIL ERROR";
           this.colorSnackbar = "error";
           this.alertSnackbar = true;
         });
+      let payload = {
+        dapil: "dprdprov",
+        param: {},
+      };
+      this.getSuara(payload).then((response) => {
+        this.fromTpsDprdProv = response.data;
+      });
     },
     setDataHasilPartai(data) {
       console.log(data);
@@ -203,7 +266,7 @@ export default {
               {
                 label: "perolehan suara",
                 backgroundColor: this.bcPartai,
-                color: 'black',
+                color: "black",
                 data: [
                   el.suaraPartai.pkb,
                   el.suaraPartai.gerindra,
@@ -237,6 +300,39 @@ export default {
       });
       this.loading = false;
       console.log(this.resultPartaiDprdProvTps);
+    },
+    setHasilCaleg(data) {
+      data.forEach((el) => {
+        let label = [];
+        let js = [];
+        el.CalegPan.forEach((e) => {
+          label.push(e.nama);
+        });
+        el.CalegPan.forEach((e) => {
+          js.push(e.jumlah_suara);
+        });
+        let rest = {
+          result: {
+            labels: label,
+            datasets: [
+              {
+                label: "perolehan suara",
+                backgroundColor: "rgba(0, 121, 107, 0.4)",
+                data: js,
+                datalabels: {
+                  color: "black",
+                  backgroundColor: "whitesmoke",
+                  align: "end",
+                  anchor: "center",
+                },
+              },
+            ],
+          },
+        };
+        this.resultCalegDprdProvTps.push(rest);
+      });
+      this.loading = false;
+      console.log(this.resultCalegDprdProvTps);
     },
   },
 
