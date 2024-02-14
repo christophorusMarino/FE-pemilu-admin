@@ -68,7 +68,7 @@
 import { mapActions } from "vuex";
 export default {
   data: () => ({
-    sidebar: true,
+    sidebar: false,
     profile: JSON.parse(localStorage.getItem("xrfgthj")),
   }),
 

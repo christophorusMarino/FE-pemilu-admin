@@ -4,6 +4,7 @@ import auth from './auth'
 import wilayah from './wilayah'
 import dapil from './dapil'
 import hasil from './hasil'
+import tabulasi from './tabulasi'
 
 Vue.use(Vuex)
 
@@ -20,6 +21,7 @@ export default new Vuex.Store({
     auth,
     wilayah,
     dapil,
-    hasil
+    hasil,
+    tabulasi
   }
 })

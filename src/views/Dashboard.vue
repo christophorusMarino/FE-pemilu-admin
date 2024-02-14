@@ -1,13 +1,17 @@
 <template>
   <div>
     <sidebar />
+    <v-container fluid>
+      <load-data-tabulasi />
+    </v-container>
   </div>
 </template>
 
 <script>
 import sidebar from "@/components/sidebar.vue";
+import LoadDataTabulasi from "@/components/Tabulasi/load-data-tabulasi.vue";
 export default {
-  components: { sidebar },
+  components: { sidebar, LoadDataTabulasi },
   name: "DashboardPage",
 
   metaInfo: {

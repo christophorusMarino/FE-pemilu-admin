@@ -37,7 +37,7 @@
         <v-divider></v-divider>
         <v-card-text
           class="py-0"
-          style="background-color: yellow; border-radius: 10px"
+          style="background-color: green; border-radius: 10px"
         >
           <v-form ref="form" v-model="valid">
             <v-row class="my-1">

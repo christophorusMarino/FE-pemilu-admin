@@ -115,10 +115,16 @@ export default {
       this.btnLoading = true;
       if (this.valid) {
         this.postLogin({ token: this.token })
-          .then(() => {
-            this.$router.replace({
-              name: "dashboard",
-            });
+          .then((response) => {
+            if (response.role === "ADMIN") {
+              this.$router.replace({
+                name: "dashboard",
+              });
+            } else {
+              this.textSnackbar = "Anda Tidak Dapat Mengakses Halaman Ini";
+              this.colorSnackbar = "error";
+              this.alertSnackbar = true;
+            }
           })
           .catch((e) => {
             this.textSnackbar = e.response.data.message;
