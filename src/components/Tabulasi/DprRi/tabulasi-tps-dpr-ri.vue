@@ -1,6 +1,11 @@
 <template>
   <div class="ma-5">
     <v-row no-gutters v-if="!loading">
+      <v-col cols="12">
+        <v-card-title class="py-0 justify-center">
+          <v-icon x-large @click="() => tabulasiDprRiTps()">mdi-refresh-circle</v-icon>
+        </v-card-title>
+      </v-col>
       <v-col cols="6" v-for="(data, idx) in dataHasilDprRiTps" :key="idx">
         <v-card color="yellow" class="ma-2">
           <v-row no-gutters>
@@ -23,7 +28,8 @@
               <v-card-title
                 class="py-0 justify-center font-weight-bold black--text text-caption"
               >
-                Suara Masuk : {{ fromTps[idx]?.tps_input_suara }} /  {{ fromTps[idx]?.jumlah_tps }} TPS
+                Suara Masuk : {{ fromTps[idx]?.tps_input_suara }} /
+                {{ fromTps[idx]?.jumlah_tps }} TPS
               </v-card-title>
             </v-col>
           </v-row>
@@ -243,7 +249,7 @@ export default {
         param: {},
       };
       this.getSuara(payload).then((response) => {
-        this.fromTps = response.data
+        this.fromTps = response.data;
       });
     },
     setDataHasilPartai(data) {
