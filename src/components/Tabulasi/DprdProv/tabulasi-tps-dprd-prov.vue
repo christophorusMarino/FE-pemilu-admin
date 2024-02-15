@@ -15,8 +15,8 @@
         ></v-autocomplete>
       </v-col>
       <v-col cols="1">
-        <v-card-title class="py-0 justify-center">
-          <v-icon x-large> mdi-refresh-circle </v-icon>
+        <v-card-title class="py-0 justify-center" v-if="dapil">
+          <v-icon x-large @click="tabulasiDprdProvTps"> mdi-refresh-circle </v-icon>
         </v-card-title>
       </v-col>
       <v-col cols="4"></v-col>

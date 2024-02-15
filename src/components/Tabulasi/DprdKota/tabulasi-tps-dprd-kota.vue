@@ -27,7 +27,7 @@
         ></v-autocomplete>
       </v-col>
       <v-col cols="2">
-        <v-card-title class="py-0 justify-center">
+        <v-card-title class="py-0 justify-center" v-if="dapil">
           <v-icon x-large @click="tabulasiDprdKotaTps">
             mdi-refresh-circle
           </v-icon>
@@ -285,41 +285,43 @@ export default {
       });
     },
     async tabulasiDprdKotaTps() {
-      this.resultPartaiDprdKotaTps = [];
-      this.resultCalegDprdKotaTps = [];
-      this.loading = true;
-      let layer = "DPRD KAB/KOTA";
-      let jenis = "tps";
-      let param = {
-        layer: layer,
-        jenis: jenis,
-        kabupaten: this.kabupaten,
-        dapil: this.dapil,
-      };
-      if (this.kabupaten) {
-        await this.getTabulasi(param)
-          .then((response) => {
-            this.dataHasilDprdKotaTps = response.hasilFinal;
-            this.setDataHasilPartai(response.hasilFinal);
-            this.setHasilCaleg(response.hasilFinal);
-          })
-          .catch((e) => {
-            this.textSnackbar = "FETCH DATA DAPIL ERROR";
-            this.colorSnackbar = "error";
-            this.alertSnackbar = true;
-          });
-        let payload = {
-          dapil: "dprdkabkota",
-          param: {
-            wilayah: this.kabupaten,
-          },
+      if (this.dapil) {
+        this.resultPartaiDprdKotaTps = [];
+        this.resultCalegDprdKotaTps = [];
+        this.loading = true;
+        let layer = "DPRD KAB/KOTA";
+        let jenis = "tps";
+        let param = {
+          layer: layer,
+          jenis: jenis,
+          kabupaten: this.kabupaten,
+          dapil: this.dapil,
         };
-        let uid_dapil = this.listDapilDprdKotaTps.find(
-          (el) => el.nama === this.dapil
-        ).uid;
-        this.getSuara(uid_dapil).then((response) => {
-          this.fromTpsDprdKota = response.data;
-        });
+        if (this.kabupaten) {
+          await this.getTabulasi(param)
+            .then((response) => {
+              this.dataHasilDprdKotaTps = response.hasilFinal;
+              this.setDataHasilPartai(response.hasilFinal);
+              this.setHasilCaleg(response.hasilFinal);
+            })
+            .catch((e) => {
+              this.textSnackbar = "FETCH DATA DAPIL ERROR";
+              this.colorSnackbar = "error";
+              this.alertSnackbar = true;
+            });
+          let payload = {
+            dapil: "dprdkabkota",
+            param: {
+              wilayah: this.kabupaten,
+            },
+          };
+          let uid_dapil = this.listDapilDprdKotaTps.find(
+            (el) => el.nama === this.dapil
+          ).uid;
+          this.getSuara(uid_dapil).then((response) => {
+            this.fromTpsDprdKota = response.data;
+          });
+        }
       }
     },
     setDataHasilPartai(data) {
