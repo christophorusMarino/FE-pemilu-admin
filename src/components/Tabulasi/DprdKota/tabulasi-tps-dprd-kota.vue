@@ -1,7 +1,7 @@
 <template>
   <div class="ma-5">
     <v-row no-gutters>
-      <v-col cols="3"></v-col>
+      <v-col cols="4"></v-col>
       <v-col cols="2">
         <v-autocomplete
           label="pilih kabupaten"
@@ -26,7 +26,7 @@
           @change="tabulasiDprdKotaTps"
         ></v-autocomplete>
       </v-col>
-      <v-col cols="2">
+      <v-col cols="1">
         <v-card-title class="py-0 justify-center" v-if="dapil">
           <v-icon x-large @click="tabulasiDprdKotaTps">
             mdi-refresh-circle
@@ -39,7 +39,7 @@
       <v-col cols="12" v-for="(data, idx) in dataHasilDprdKotaTps" :key="idx">
         <v-card class="ma-2">
           <v-row no-gutters>
-            <v-col cols="6">
+            <v-col cols="12">
               <v-card-title
                 class="pt-1 py-0 justify-center font-weight-bold black--text text-subtitle-1"
               >

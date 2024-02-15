@@ -321,8 +321,8 @@ export default {
         this.valid = true;
       }
     },
-    post(data) {
-      this.postDataDprdProv(data)
+    async post(data) {
+      await this.postDataDprdProv(data)
         .then((response) => {
           this.textSnackbar = response.message;
           this.colorSnackbar = "success";
@@ -337,9 +337,9 @@ export default {
           this.btnLoading = false;
           this.fotoDprdProv = [];
           this.tempDprdProv = [];
-          this.getDapil();
           this.$emit("reloadHasil");
         });
+      this.getDapil();
     },
     chooseImageDprdProv() {
       if (this.tempDprdProv?.length) {

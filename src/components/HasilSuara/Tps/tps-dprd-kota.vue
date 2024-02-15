@@ -321,8 +321,8 @@ export default {
         this.valid = true;
       }
     },
-    post(data) {
-      this.postDataDprdKota(data)
+    async post(data) {
+      await this.postDataDprdKota(data)
         .then((response) => {
           this.textSnackbar = response.message;
           this.colorSnackbar = "success";
@@ -337,9 +337,9 @@ export default {
           this.btnLoading = false;
           this.fotoDprdKota = [];
           this.tempDprdKota = [];
-          this.getDapil();
           this.$emit("reloadHasil");
         });
+      this.getDapil();
     },
     chooseImageDprdKota() {
       if (this.tempDprdKota?.length) {

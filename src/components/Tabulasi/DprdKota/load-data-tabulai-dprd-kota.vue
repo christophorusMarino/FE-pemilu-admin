@@ -11,7 +11,7 @@
           <v-tab href="#KECAMATAN_DPRD_KOTA"> PLANO KECAMATAN </v-tab>
         </v-tabs>
       </v-app-bar>
-      <v-sheet id="scroll-dpr-ri" class="overflow-y-auto" max-height="75vh">
+      <v-sheet id="scroll-dpr-ri" class="overflow-y-auto" max-height="90vh">
         <v-container fluid style="height: 100vh">
           <v-tabs-items v-model="currentTabDprdKota">
             <v-tab-item value="TPS_DPRD_KOTA">
