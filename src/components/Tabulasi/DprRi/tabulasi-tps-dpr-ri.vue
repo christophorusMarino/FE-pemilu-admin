@@ -1,15 +1,31 @@
 <template>
   <div class="ma-5">
-    <v-row no-gutters v-if="!loading">
-      <v-col cols="12">
+    <v-row no-gutters>
+      <v-col cols="4"></v-col>
+      <v-col cols="3">
+        <v-autocomplete
+          v-model="dapil"
+          label="pilih dapil"
+          dense
+          outlined
+          :items="listDapilDprRiTps"
+          item-text="nama"
+          item-value="nama"
+          @change="tabulasiDprRiTps"
+        ></v-autocomplete>
+      </v-col>
+      <v-col cols="1">
         <v-card-title class="py-0 justify-center">
-          <v-icon x-large @click="() => tabulasiDprRiTps()"
-            >mdi-refresh-circle</v-icon
-          >
+          <v-icon x-large @click="() => tabulasiDprRiTps()">
+            mdi-refresh-circle
+          </v-icon>
         </v-card-title>
       </v-col>
-      <v-col cols="6" v-for="(data, idx) in dataHasilDprRiTps" :key="idx">
-        <v-card color="yellow" class="ma-2">
+      <v-col cols="4"></v-col>
+    </v-row>
+    <v-row no-gutters v-if="!loading">
+      <v-col cols="12" v-for="(data, idx) in dataHasilDprRiTps" :key="idx">
+        <v-card class="ma-2">
           <v-row no-gutters>
             <v-col cols="12">
               <v-card-title
@@ -30,15 +46,15 @@
               <v-card-title
                 class="py-0 justify-center font-weight-bold black--text text-caption"
               >
-                Suara Masuk : {{ fromTpsDprRi[idx]?.tps_input_suara }} /
-                {{ fromTpsDprRi[idx]?.jumlah_tps }} TPS
+                Suara Masuk : {{ fromTpsDprRi.tps_input_suara }} /
+                {{ fromTpsDprRi.jumlah_tps }} TPS
               </v-card-title>
             </v-col>
           </v-row>
           <v-divider class="my-1"></v-divider>
           <v-card-text class="px-0 mx-0">
             <v-row no-gutters>
-              <v-col cols="12">
+              <v-col cols="6">
                 <v-card-title
                   class="py-0 justify-center font-weight-bold black--text text-subtitle-2"
                 >
@@ -55,7 +71,7 @@
                   />
                 </v-card-text>
               </v-col>
-              <v-col cols="12">
+              <v-col cols="6">
                 <v-card-title
                   class="py-0 justify-center font-weight-bold black--text text-subtitle-2"
                 >
@@ -81,19 +97,19 @@
                 <v-card-text class="ma-0 px-2">
                   <v-row no-gutters>
                     <v-col
-                      cols="3"
+                      cols="2"
                       v-for="(val, key, index) in dataHasilDprRiTps[idx].kursi"
                       :key="index"
                     >
-                      <v-card color="teal darken-2" outlined class="ma-1">
+                      <v-card color="yellow" outlined class="ma-1">
                         <v-card-title
-                          class="justify-center white--text font-weight-bold black--text text-subtitle-2"
+                          class="justify-center black--text font-weight-bold black--text text-subtitle-2"
                         >
                           {{ key.toUpperCase() }}
                         </v-card-title>
                         <v-divider></v-divider>
                         <v-card-title
-                          class="justify-center white--text font-weight-bold black--text text-caption"
+                          class="justify-center black--text font-weight-bold black--text text-caption"
                         >
                           Kursi: {{ val }}
                         </v-card-title>
@@ -167,15 +183,17 @@ export default {
     },
     height: {
       type: Number,
-      default: 300,
+      default: 230,
     },
   },
 
   data: () => ({
+    dapil: null,
     loading: false,
     alertSnackbar: false,
     textSnackbar: "",
     colorSnackbar: "",
+    listDapilDprRiTps: [],
     dataHasilDprRiTps: [],
     dataHasilCalegDprRiTps: [],
     chartOptions: {
@@ -202,7 +220,7 @@ export default {
       "PPP",
       "Ummat",
     ],
-    bcPartai: "rgba(86, 28, 36, 0.4)",
+    bcPartai: "rgba(255, 255, 0, 0.8)",
     resultPartaiDprRiTps: [],
     resultCalegDprRiTps: [],
     fromTpsDprRi: [],
@@ -211,12 +229,16 @@ export default {
   watch: {
     layer() {
       if (this.layer === "DPR_RI" && this.jenis === "TPS_DPR_RI") {
-        this.tabulasiDprRiTps();
+        if (this.dapil) {
+          this.tabulasiDprRiTps();
+        }
       }
     },
     jenis() {
       if (this.layer === "DPR_RI" && this.jenis === "TPS_DPR_RI") {
-        this.tabulasiDprRiTps();
+        if (this.dapil) {
+          this.tabulasiDprRiTps();
+        }
       }
     },
   },
@@ -224,7 +246,8 @@ export default {
   methods: {
     ...mapActions({
       getTabulasi: "tabulasi/getDataTabulasi",
-      getSuara: "tabulasi/getHasilTps",
+      getSuara: "tabulasi/getHasilTpsPerDapil",
+      getDapil: "dapil/getDapilByParam",
     }),
     async tabulasiDprRiTps() {
       this.resultPartaiDprRiTps = [];
@@ -235,6 +258,7 @@ export default {
       let param = {
         layer: layer,
         jenis: jenis,
+        dapil: this.dapil,
       };
       await this.getTabulasi(param)
         .then((response) => {
@@ -247,11 +271,11 @@ export default {
           this.colorSnackbar = "error";
           this.alertSnackbar = true;
         });
-      let payload = {
-        dapil: "dprri",
-        param: {},
-      };
-      this.getSuara(payload).then((response) => {
+
+      let uid_dapil = this.listDapilDprRiTps.find(
+        (el) => el.nama === this.dapil
+      ).uid;
+      this.getSuara(uid_dapil).then((response) => {
         this.fromTpsDprRi = response.data;
       });
     },
@@ -287,7 +311,7 @@ export default {
                 ],
                 datalabels: {
                   color: "black",
-                  backgroundColor: "whitesmoke",
+                  backgroundColor: "white",
                   align: "end",
                   anchor: "center",
                 },
@@ -298,7 +322,6 @@ export default {
         this.resultPartaiDprRiTps.push(rest);
       });
       this.loading = false;
-      console.log(this.resultPartaiDprRiTps);
     },
     setHasilCaleg(data) {
       data.forEach((el) => {
@@ -316,7 +339,7 @@ export default {
             datasets: [
               {
                 label: "perolehan suara",
-                backgroundColor: "rgba(0, 121, 107, 0.4)",
+                backgroundColor: this.bcPartai,
                 data: js,
                 datalabels: {
                   color: "black",
@@ -331,13 +354,21 @@ export default {
         this.resultCalegDprRiTps.push(rest);
       });
       this.loading = false;
-      console.log(this.resultCalegDprRiTps);
     },
   },
 
   mounted() {
+    let payload = {
+      layer: "dprri",
+      param: {},
+    };
+    this.getDapil(payload).then((response) => {
+      this.listDapilDprRiTps = response.data;
+    });
     if (this.layer === "DPR_RI" && this.jenis === "TPS_DPR_RI") {
-      this.tabulasiDprRiTps();
+      if (this.dapil) {
+        this.tabulasiDprRiTps();
+      }
     }
   },
 };

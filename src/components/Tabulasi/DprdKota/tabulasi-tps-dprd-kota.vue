@@ -1,63 +1,74 @@
 <template>
   <div class="ma-5">
-    <v-row no-gutters v-if="!loading">
-      <v-col cols="12">
+    <v-row no-gutters>
+      <v-col cols="3"></v-col>
+      <v-col cols="2">
+        <v-autocomplete
+          label="pilih kabupaten"
+          v-model="kabupaten"
+          :items="listKota"
+          item-text="nama"
+          item-value="nama"
+          outlined
+          dense
+          @change="getDapil"
+        ></v-autocomplete>
+      </v-col>
+      <v-col cols="2">
+        <v-autocomplete
+          v-model="dapil"
+          label="pilih dapil"
+          dense
+          outlined
+          :items="listDapilDprdKotaTps"
+          item-text="nama"
+          item-value="nama"
+          @change="tabulasiDprdKotaTps"
+        ></v-autocomplete>
+      </v-col>
+      <v-col cols="2">
         <v-card-title class="py-0 justify-center">
-          <v-row no-gutters>
-            <v-col cols="4"></v-col>
-            <v-col cols="3">
-              <v-autocomplete
-                v-model="kabupaten"
-                :items="listKota"
-                item-text="nama"
-                item-value="nama"
-                outlined
-                dense
-                @change="tabulasiDprdKotaTps"
-              ></v-autocomplete>
-            </v-col>
-            <v-col cols="1">
-              <v-icon x-large @click="tabulasiDprdKotaTps">
-                mdi-refresh-circle
-              </v-icon>
-            </v-col>
-            <v-col cols="4"></v-col>
-          </v-row>
+          <v-icon x-large @click="tabulasiDprdKotaTps">
+            mdi-refresh-circle
+          </v-icon>
         </v-card-title>
       </v-col>
-      <v-col cols="6" v-for="(data, idx) in dataHasilDprdKotaTps" :key="idx">
-        <v-card color="green" class="ma-2">
+      <v-col cols="3"></v-col>
+    </v-row>
+    <v-row no-gutters v-if="!loading">
+      <v-col cols="12" v-for="(data, idx) in dataHasilDprdKotaTps" :key="idx">
+        <v-card class="ma-2">
           <v-row no-gutters>
-            <v-col cols="12">
+            <v-col cols="6">
               <v-card-title
-                class="pt-1 py-0 justify-center font-weight-bold white--text text-subtitle-1"
+                class="pt-1 py-0 justify-center font-weight-bold black--text text-subtitle-1"
               >
                 HASIL PERHITUNGAN SUARA
               </v-card-title>
               <v-card-title
-                class="py-0 justify-center font-weight-bold white--text text-subtitle-1"
+                class="py-0 justify-center font-weight-bold black--text text-subtitle-1"
               >
-                - {{ data.jenis }} / {{ data.nama }} -
+                - {{ data.jenis }} || {{ data.nama }} -
               </v-card-title>
               <v-card-title
-                class="py-0 justify-center font-weight-bold white--text text-caption"
+                class="py-0 justify-center font-weight-bold black--text text-caption"
               >
                 Jumlah Kursi : {{ data.jumlah_kursi }}
               </v-card-title>
               <v-card-title
-                class="py-0 justify-center font-weight-bold white--text text-caption"
+                class="py-0 justify-center font-weight-bold black--text text-caption"
               >
-                Suara Masuk : {{ fromTpsDprdKota[idx]?.tps_input_suara }} /
-                {{ fromTpsDprdKota[idx]?.jumlah_tps }} TPS
+                Suara Masuk : {{ fromTpsDprdKota.tps_input_suara }} /
+                {{ fromTpsDprdKota.jumlah_tps }} TPS
               </v-card-title>
             </v-col>
           </v-row>
           <v-divider class="my-1"></v-divider>
           <v-card-text class="px-0 mx-0">
             <v-row no-gutters>
-              <v-col cols="12">
+              <v-col cols="6">
                 <v-card-title
-                  class="py-0 justify-center font-weight-bold white--text text-subtitle-2"
+                  class="py-0 justify-center font-weight-bold black--text text-subtitle-2"
                 >
                   - PEROLEHAN SUARA PARTAI -
                 </v-card-title>
@@ -72,7 +83,7 @@
                   />
                 </v-card-text>
               </v-col>
-              <v-col cols="12">
+              <v-col cols="6">
                 <v-card-title
                   class="py-0 justify-center font-weight-bold white--text text-subtitle-2"
                 >
@@ -98,12 +109,12 @@
                 <v-card-text class="ma-0 px-2">
                   <v-row no-gutters>
                     <v-col
-                      cols="3"
+                      cols="2"
                       v-for="(val, key, index) in dataHasilDprdKotaTps[idx]
                         .kursi"
                       :key="index"
                     >
-                      <v-card color="teal darken-2" outlined class="ma-1">
+                      <v-card color="green" outlined class="ma-1">
                         <v-card-title
                           class="justify-center white--text font-weight-bold black--text text-subtitle-2"
                         >
@@ -186,16 +197,18 @@ export default {
     },
     height: {
       type: Number,
-      default: 300,
+      default: 230,
     },
   },
 
   data: () => ({
+    kabupaten: null,
+    dapil: null,
     loading: false,
     alertSnackbar: false,
     textSnackbar: "",
     colorSnackbar: "",
-    kabupaten: null,
+    listDapilDprdKotaTps: [],
     dataHasilDprdKotaTps: [],
     dataHasilCalegDprdKotaTps: [],
     chartOptions: {
@@ -222,7 +235,7 @@ export default {
       "PPP",
       "Ummat",
     ],
-    bcPartai: "rgba(0, 137, 123, 0.7)",
+    bcPartai: "rgba(0, 128, 0, 0.7)",
     resultPartaiDprdKotaTps: [],
     resultCalegDprdKotaTps: [],
     fromTpsDprdKota: [],
@@ -238,6 +251,7 @@ export default {
     layer() {
       if (this.layer === "DPRD_PROV" && this.jenis === "TPS_DPRD_KOTA") {
         this.kabupaten = null;
+        this.dapil = null;
         this.dataHasilDprdKotaTps = [];
         this.dataHasilCalegDprdKotaTps = [];
       }
@@ -245,6 +259,7 @@ export default {
     jenis() {
       if (this.layer === "DPRD_KOTA" && this.jenis === "TPS_DPRD_KOTA") {
         this.kabupaten = null;
+        this.dapil = null;
         this.dataHasilDprdKotaTps = [];
         this.dataHasilCalegDprdKotaTps = [];
       }
@@ -254,9 +269,21 @@ export default {
   methods: {
     ...mapActions({
       getDataKota: "wilayah/getKota",
+      getDataDapil: "dapil/getDapilByParam",
       getTabulasi: "tabulasi/getDataTabulasi",
-      getSuara: "tabulasi/getHasilTps",
+      getSuara: "tabulasi/getHasilTpsPerDapil",
     }),
+    getDapil() {
+      let payload = {
+        layer: "dprdkabkota",
+        param: {
+          wilayah: this.kabupaten,
+        },
+      };
+      this.getDataDapil(payload).then((response) => {
+        this.listDapilDprdKotaTps = response.data;
+      });
+    },
     async tabulasiDprdKotaTps() {
       this.resultPartaiDprdKotaTps = [];
       this.resultCalegDprdKotaTps = [];
@@ -267,6 +294,7 @@ export default {
         layer: layer,
         jenis: jenis,
         kabupaten: this.kabupaten,
+        dapil: this.dapil,
       };
       if (this.kabupaten) {
         await this.getTabulasi(param)
@@ -286,7 +314,10 @@ export default {
             wilayah: this.kabupaten,
           },
         };
-        this.getSuara(payload).then((response) => {
+        let uid_dapil = this.listDapilDprdKotaTps.find(
+          (el) => el.nama === this.dapil
+        ).uid;
+        this.getSuara(uid_dapil).then((response) => {
           this.fromTpsDprdKota = response.data;
         });
       }
@@ -323,7 +354,8 @@ export default {
                   el.suaraPartai.ummat,
                 ],
                 datalabels: {
-                  color: "white",
+                  color: "black",
+                  backgroundColor: "white",
                   align: "end",
                   anchor: "center",
                 },
@@ -351,11 +383,11 @@ export default {
             datasets: [
               {
                 label: "perolehan suara",
-                backgroundColor: "rgba(0, 121, 107, 0.4)",
+                backgroundColor: this.bcPartai,
                 data: js,
                 datalabels: {
                   color: "black",
-                  backgroundColor: "whitesmoke",
+                  backgroundColor: "white",
                   align: "end",
                   anchor: "center",
                 },
@@ -373,6 +405,7 @@ export default {
     this.getDataKota();
     if (this.layer === "DPRD_KOTA" && this.jenis === "TPS_DPRD_KOTA") {
       this.kabupaten = null;
+      this.dapil = null;
       this.dataHasilDprdKotaTps = [];
       this.dataHasilCalegDprdKotaTps = [];
     }

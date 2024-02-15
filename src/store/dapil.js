@@ -35,6 +35,22 @@ export default {
     },
 
     actions: {
+        async getDapilByParam(_, { layer, param }) {
+            let role = JSON.parse(localStorage.getItem("xrfgthj")).role;
+            return new Promise((resolve, reject) => {
+                axios.get(`dapil/layer/${layer}?${resolveQueryParams(param)}`, {
+                    headers: {
+                        "role": role
+                    },
+                })
+                    .then((response) => {
+                        resolve(response.data)
+                    })
+                    .catch(error => {
+                        reject(error)
+                    })
+            })
+        },
         async getDapilDprRi({ commit }, param) {
             let role = JSON.parse(localStorage.getItem("xrfgthj")).role;
             try {
