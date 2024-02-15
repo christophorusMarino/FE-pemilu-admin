@@ -16,7 +16,9 @@
       </v-col>
       <v-col cols="1">
         <v-card-title class="py-0 justify-center" v-if="dapil">
-          <v-icon x-large @click="tabulasiDprdProvTps"> mdi-refresh-circle </v-icon>
+          <v-icon x-large @click="tabulasiDprdProvTps">
+            mdi-refresh-circle
+          </v-icon>
         </v-card-title>
       </v-col>
       <v-col cols="4"></v-col>
@@ -45,7 +47,14 @@
                 class="py-0 justify-center font-weight-bold black--text text-caption"
               >
                 Suara Masuk : {{ fromTpsDprdProv.tps_input_suara }} /
-                {{ fromTpsDprdProv.jumlah_tps }} TPS
+                {{ fromTpsDprdProv.jumlah_tps }} TPS (
+                {{
+                  (
+                    (fromTpsDprdProv.tps_input_suara /
+                      fromTpsDprdProv.jumlah_tps) *
+                    100
+                  ).toFixed(2)
+                }}% )
               </v-card-title>
             </v-col>
           </v-row>

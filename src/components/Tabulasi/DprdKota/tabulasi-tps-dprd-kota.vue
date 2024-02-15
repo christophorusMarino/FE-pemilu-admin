@@ -59,7 +59,14 @@
                 class="py-0 justify-center font-weight-bold black--text text-caption"
               >
                 Suara Masuk : {{ fromTpsDprdKota.tps_input_suara }} /
-                {{ fromTpsDprdKota.jumlah_tps }} TPS
+                {{ fromTpsDprdKota.jumlah_tps }} TPS (
+                {{
+                  (
+                    (fromTpsDprdKota.tps_input_suara /
+                      fromTpsDprdKota.jumlah_tps) *
+                    100
+                  ).toFixed(2)
+                }}% )
               </v-card-title>
             </v-col>
           </v-row>
