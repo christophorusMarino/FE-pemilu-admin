@@ -324,6 +324,7 @@ export default {
           this.textSnackbar = response.message;
           this.colorSnackbar = "success";
           this.alertSnackbar = true;
+          this.$emit("reloadHasil");
         })
         .catch((e) => {
           this.textSnackbar = e.response.data.message;
@@ -334,7 +335,6 @@ export default {
           this.btnLoading = false;
           this.fotoDprRi = [];
           this.tempDprRi = [];
-          this.$emit("reloadHasil");
         });
       this.getDapil();
     },
