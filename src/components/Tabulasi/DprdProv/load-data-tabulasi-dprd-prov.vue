@@ -15,9 +15,17 @@
         <v-container fluid style="height: 100vh">
           <v-tabs-items v-model="currentTabDprdProv">
             <v-tab-item value="TPS_DPRD_PROV">
-              <tabulasi-tps-dprd-prov :layer="layer" :jenis="currentTabDprdProv" />
+              <tabulasi-tps-dprd-prov
+                :layer="layer"
+                :jenis="currentTabDprdProv"
+              />
             </v-tab-item>
-            <v-tab-item value="KECAMATAN_DPRD_PROV"> </v-tab-item>
+            <v-tab-item value="KECAMATAN_DPRD_PROV">
+              <tabulasi-kecamatan-dprd-provinsi
+                :layer="layer"
+                :jenis="currentTabDprdProv"
+              />
+            </v-tab-item>
           </v-tabs-items>
         </v-container>
       </v-sheet>
@@ -27,9 +35,10 @@
   
   <script>
 import TabulasiTpsDprdProv from "../DprdProv/tabulasi-tps-dprd-prov.vue";
+import TabulasiKecamatanDprdProvinsi from "./tabulasi-kecamatan-dprd-provinsi.vue";
 
 export default {
-  components: { TabulasiTpsDprdProv },
+  components: { TabulasiTpsDprdProv, TabulasiKecamatanDprdProvinsi },
   props: ["layer"],
 
   data: () => ({

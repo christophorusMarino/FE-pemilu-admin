@@ -44,5 +44,39 @@ export default {
                     })
             })
         },
+
+        getHasilSuaraKecamatan(_, param) {
+            let role = JSON.parse(localStorage.getItem("xrfgthj")).role;
+            return new Promise((resolve, reject) => {
+                axios.get(`suarakecamatan?${resolveQueryParams(param)}`, {
+                    headers: {
+                        "role": role
+                    },
+                })
+                    .then((response) => {
+                        resolve(response.data)
+                    })
+                    .catch(error => {
+                        reject(error)
+                    })
+            })
+        },
+        postHasilSuaraKecamatan(_, data) {
+            let role = JSON.parse(localStorage.getItem("xrfgthj")).role;
+            return new Promise((resolve, reject) => {
+                axios.post('suarakecamatan', data, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                        "role": role
+                    },
+                })
+                    .then((response) => {
+                        resolve(response.data)
+                    })
+                    .catch(error => {
+                        reject(error)
+                    })
+            })
+        },
     }
 }
