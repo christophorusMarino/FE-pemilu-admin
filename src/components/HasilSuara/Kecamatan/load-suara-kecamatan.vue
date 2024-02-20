@@ -44,6 +44,7 @@
                 :hasil-suara="hasilSuara"
                 :kabupaten="namaKabupaten"
                 :kecamatan="namaKecamatan"
+                @reloadHasil="dataHasil"
               />
             </v-tab-item>
             <v-tab-item value="DPRD_PROV">
@@ -52,6 +53,7 @@
                 :hasil-suara="hasilSuara"
                 :kabupaten="namaKabupaten"
                 :kecamatan="namaKecamatan"
+                @reloadHasil="dataHasil"
               />
             </v-tab-item>
             <v-tab-item value="DPRD_KOTA">
@@ -60,6 +62,7 @@
                 :hasil-suara="hasilSuara"
                 :kabupaten="namaKabupaten"
                 :kecamatan="namaKecamatan"
+                @reloadHasil="dataHasil"
               />
             </v-tab-item>
           </v-tabs-items>
