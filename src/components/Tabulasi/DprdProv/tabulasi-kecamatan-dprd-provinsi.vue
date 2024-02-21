@@ -47,11 +47,11 @@
                   class="py-0 justify-center font-weight-bold black--text text-caption"
                 >
                   Suara Masuk : {{ fromKecDprdProv.tps_input_suara }} /
-                  {{ fromKecDprdProv.jumlah_tps }} KECAMATAN (
+                  {{ fromKecDprdProv.jumlah_kecamatan }} KECAMATAN (
                   {{
                     (
                       (fromKecDprdProv.tps_input_suara /
-                        fromKecDprdProv.jumlah_tps) *
+                        fromKecDprdProv.jumlah_kecamatan) *
                       100
                     ).toFixed(2)
                   }}% )
@@ -250,7 +250,7 @@
     methods: {
       ...mapActions({
         getTabulasi: "tabulasi/getDataTabulasi",
-        getSuara: "tabulasi/getHasilTpsPerDapil",
+        getSuara: "tabulasi/getHasilKecamatanPerDapil",
         getDapil: "dapil/getDapilByParam",
       }),
       async tabulasiDprdProvKec() {

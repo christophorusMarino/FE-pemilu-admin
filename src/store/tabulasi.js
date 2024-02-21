@@ -60,6 +60,23 @@ export default {
                         reject(error)
                     })
             })
+        },
+
+        getHasilKecamatanPerDapil(_, dapil) {
+            let role = JSON.parse(localStorage.getItem("xrfgthj")).role;
+            return new Promise((resolve, reject) => {
+                axios.get(`suarakecamatan/notinput/${dapil}`, {
+                    headers: {
+                        "role": role
+                    },
+                })
+                    .then((response) => {
+                        resolve(response.data)
+                    })
+                    .catch(error => {
+                        reject(error)
+                    })
+            })
         }
     }
 }

@@ -59,11 +59,11 @@
                 class="py-0 justify-center font-weight-bold black--text text-caption"
               >
                 Suara Masuk : {{ fromKecDprdKota.tps_input_suara }} /
-                {{ fromKecDprdKota.jumlah_tps }} KECAMATAN (
+                {{ fromKecDprdKota.jumlah_kecamatan }} KECAMATAN (
                 {{
                   (
                     (fromKecDprdKota.tps_input_suara /
-                      fromKecDprdKota.jumlah_tps) *
+                      fromKecDprdKota.jumlah_kecamatan) *
                     100
                   ).toFixed(2)
                 }}% )
@@ -278,7 +278,7 @@ export default {
       getDataKota: "wilayah/getKota",
       getDataDapil: "dapil/getDapilByParam",
       getTabulasi: "tabulasi/getDataTabulasi",
-      getSuara: "tabulasi/getHasilTpsPerDapil",
+      getSuara: "tabulasi/getHasilKecamatanPerDapil",
     }),
     getDapil() {
       let payload = {
